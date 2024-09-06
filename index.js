@@ -3,8 +3,15 @@ const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt'); 
 const { MongoClient, ServerApiVersion } = require('mongodb');
+//const { OpenAI } = require('openai');
 require('dotenv').config()
 const port = process.env.PORT || 3000;
+
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -28,11 +35,12 @@ async function run() {
     // await client.connect();
     
 
-    const usersCollection = client.db("TempDB").collection("usersauth");
+    const usersCollection = client.db("BookpalaceDB").collection("userInfos");
 
 
     app.post('/adduser', async (req, res) => {
       const userInfo = req.body; 
+      const { email } = userInfo;
       try {
           const existingUser = await usersCollection.findOne({ email });
           if (existingUser) {
@@ -44,7 +52,26 @@ async function run() {
           console.error(err);
           res.status(500).json({ error: 'Server error' });
       }
-  });
+    });
+
+    // ------------->    Open AI API  <-----------------
+     
+    //   app.post('/openai', async (req, res) => {
+    //     const { prompt } = req.body;
+    //     console.log(prompt);
+    //     try {
+    //       const completion = await openai.chat.completions.create({
+    //         model: "text-davinci-003",
+    //         messages: [
+    //           { role: "system", content: "You are a helpful assistant." },
+    //           { role: "user", content: prompt }
+    //         ]
+    //       });
+    //       res.status(200).json({ response: completion.choices[0].message.content });
+    //     } catch (error) {
+    //       res.status(500).json({ error: 'Internal Server Error' });
+    //     }
+    // });
   
   // Send a ping to confirm a successful connection
   await client.db("admin").command({ ping: 1 });
