@@ -20,6 +20,15 @@ module.exports = function (usersCollection) {
         }
       });
 
+    router.get('/currentuser', async (req, res) => {
+        const useremail = req.query.email;
+        console.log("User Email: ", useremail);
+        const user = await usersCollection.findOne({ email: useremail });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.send(user);
+    });
     router.get('/allusers', async (req, res) => {
         const users = await usersCollection.find().toArray();
         res.send(users);

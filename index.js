@@ -38,22 +38,6 @@ async function run() {
     
     app.use('/24141181', userRoutes);
 
-    // app.post('/adduser', async (req, res) => {
-    //   const userInfo = req.body; 
-    //   const { email } = userInfo;
-    //   try {
-    //       const existingUser = await usersCollection.findOne({ email });
-    //       if (existingUser) {
-    //           return res.status(400).json({ error: 'User already exists' });
-    //       }
-    //       await usersCollection.insertOne(  userInfo );
-    //       res.status(200).json({ success: 'User added successfully' });
-    //   } catch (err) {
-    //       console.error(err);
-    //       res.status(500).json({ error: 'Server error' });
-    //   }
-    // });
-
     
 
   
