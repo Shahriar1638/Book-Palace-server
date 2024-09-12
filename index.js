@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const bcrypt = require('bcrypt'); 
+// const bcrypt = require('bcrypt'); 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 3000;
@@ -33,8 +33,10 @@ async function run() {
     
 
     const usersCollection = client_one.db("BookpalaceDB").collection("userInfos");
+    const bookCollection = client_one.db("BookpalaceDB").collection("BookCollection");
+    const pendingCollection = client_one.db("BookpalaceDB").collection("PendingBooks");
 
-    const userRoutes = require('./Routes/PersonOne')(usersCollection);
+    const userRoutes = require('./Routes/PersonOne')(usersCollection, bookCollection, pendingCollection);
     
     app.use('/24141181', userRoutes);
 

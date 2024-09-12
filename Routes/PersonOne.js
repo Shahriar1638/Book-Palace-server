@@ -3,7 +3,7 @@ const express = require('express');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
 
-module.exports = function (usersCollection) {
+module.exports = function (usersCollection, bookCollection, pendingCollection) {
     router.post('/adduser', async (req, res) => {
         const userInfo = req.body; 
         const { email } = userInfo;
@@ -22,7 +22,6 @@ module.exports = function (usersCollection) {
 
     router.get('/currentuser', async (req, res) => {
         const useremail = req.query.email;
-        console.log("User Email: ", useremail);
         const user = await usersCollection.findOne({ email: useremail });
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -34,6 +33,36 @@ module.exports = function (usersCollection) {
         res.send(users);
     });
 
+    router.get('/allbooks', async (req, res) => {
+        const books = await bookCollection.find().toArray();
+        res.send(books);
+    });
+
+    router.get('/allpendingbooks', async (req, res) => {
+        const pending = await pendingCollection.find().toArray();
+        res.send(pending);
+    });
+
+
+
+    router.post('/addbook', async (req, res) => {
+        const book = req.body;
+        await bookCollection.insertOne(book);
+        res.status(200).json({ success: 'Book added successfully' });
+    });
+    router.delete('/deletependingbook/:id', async (req, res) => {
+        const { id } = req.params;
+        await pendingCollection.deleteOne({ _id: new ObjectId(id) });
+        res.status(200).json({ success: 'Pending book deleted' });
+    });
+
+
+    router.patch('/updatependingbook/:id', async (req, res) => {
+        const { id } = req.params;
+        const updatedBook = req.body;
+        await pendingCollection.updateOne({ _id: new ObjectId(id) }, { $set: { status: updatedBook.status } });
+        res.status(200).json({ success: 'Book updated successfully' });
+    });
     // Add the remaining user-related routes
     // ...
 
