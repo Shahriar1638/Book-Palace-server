@@ -69,6 +69,12 @@ module.exports = function (usersCollection, bookCollection, pendingCollection,fo
         const posts = await forumPostCollection.find().toArray();
         res.send(posts);
     });
+
+    router.post('/addpendingbooks', async (req, res) => {
+        const post = req.body;
+        await pendingCollection.insertOne(post);
+        res.status(200).json({ success: 'Post added successfully' });
+    });
     // Add the remaining user-related routes
     // ...
 

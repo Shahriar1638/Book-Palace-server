@@ -30,5 +30,17 @@ module.exports = (usersCollection, bookCollection, pendingCollection, forumPostC
         res.status(200).json({ success: 'Post added successfully' });
     });
 
+    router.get('/mypendingbooks/:id', async (req, res) => {
+        const { id } = req.params;
+        const pending = await pendingCollection.find({ authorID: id }).toArray();
+        res.send(pending);
+    });
+
+    router.delete('/deletemypendingbook/:id', async (req, res) => {
+        const { id } = req.params;
+        await pendingCollection.deleteOne({ _id: new ObjectId(id) });
+        res.status(200).json({ success: 'Post deleted' });
+    });
+
     return router;
 };
