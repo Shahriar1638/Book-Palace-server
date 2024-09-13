@@ -3,7 +3,7 @@ const express = require('express');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
 
-module.exports = function (usersCollection, bookCollection, pendingCollection) {
+module.exports = function (usersCollection, bookCollection, pendingCollection,forumPostCollection) {
     router.post('/adduser', async (req, res) => {
         const userInfo = req.body; 
         const { email } = userInfo;
@@ -62,6 +62,12 @@ module.exports = function (usersCollection, bookCollection, pendingCollection) {
         const updatedBook = req.body;
         await pendingCollection.updateOne({ _id: new ObjectId(id) }, { $set: { status: updatedBook.status } });
         res.status(200).json({ success: 'Book updated successfully' });
+    });
+
+
+    router.get('/allforumposts', async (req, res) => {
+        const posts = await forumPostCollection.find().toArray();
+        res.send(posts);
     });
     // Add the remaining user-related routes
     // ...

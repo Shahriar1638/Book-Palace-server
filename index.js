@@ -7,7 +7,8 @@ require('dotenv').config()
 const port = process.env.PORT || 3000;
 
 
-
+// person one = md shahriar hossain 24141181
+// person two = asir abrar 24141236
 
 app.use(cors());
 app.use(express.json());
@@ -35,10 +36,13 @@ async function run() {
     const usersCollection = client_one.db("BookpalaceDB").collection("userInfos");
     const bookCollection = client_one.db("BookpalaceDB").collection("BookCollection");
     const pendingCollection = client_one.db("BookpalaceDB").collection("PendingBooks");
+    const forumPostCollection = client_one.db("BookpalaceDB").collection("CommunityForums");
 
-    const userRoutes = require('./Routes/PersonOne')(usersCollection, bookCollection, pendingCollection);
-    
-    app.use('/24141181', userRoutes);
+    const PersonOneRoutes = require('./Routes/PersonOne')(usersCollection, bookCollection, pendingCollection, forumPostCollection);
+    const PersonTwoRoutes = require('./Routes/PersonTwo')(usersCollection, bookCollection, pendingCollection, forumPostCollection);
+
+    app.use('/24141236', PersonTwoRoutes);
+    app.use('/24141181', PersonOneRoutes);
 
     
 
